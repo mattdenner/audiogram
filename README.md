@@ -25,17 +25,17 @@ this is through bisection: play the frequency at 50% volume; if you can hear it 
 search across all frequencies: map a search function over a sequence of frequencies generating a pair for each of frequency-volume, where volume is the level at which the
 frequency becomes just audible.  Those pairs can then be plotted on a graph.
 
-This mapping is what [`audiogram.core/audiogram-for`](blob/master/src/audiogram/core.clj#66) does: given something representing a user being tested, it returns the sequence of
+This mapping is what [`audiogram.core/audiogram-for`](tree/master/src/audiogram/core.clj#66) does: given something representing a user being tested, it returns the sequence of
 frequency-volume pairs.  It does a bit of partial application, because the user and the volume ranges remain the same regardless of frequency, but it is extremely simple to
-read.  It uses the [`audiogram.core/bisect`](blob/master/src/audiogram/core.clj#9) function to search the volume range.
+read.  It uses the [`audiogram.core/bisect`](tree/master/src/audiogram/core.clj#9) function to search the volume range.
 
-The function performing the search comes from [`audiogram.core/bist-fn-for-frequency`](blob/master/src/audiogram/core.clj#55) which is a higher-order function.  Given a user
+The function performing the search comes from [`audiogram.core/bist-fn-for-frequency`](tree/master/src/audiogram/core.clj#55) which is a higher-order function.  Given a user
 and the frequency to test them at, it returns a function that will find the volume at which the frequency is just audible.  The neat thing here is that this function is really
 just a simple question: "if a sound is played, did the user hear it or did the sound stop?"  And this can be modelled by having two [core.async](https://github.com/clojure/core.async)
 channels, representing the sound and the user, and waiting for the first to have a value on it.  Again, it's extremely simple to read.
 
-The bits that tie this together are then the [`audiogram.core/hearing-user'](blob/master/src/audiogram/core.clj#44), which is a simple core.async process that sends `true` on
-a channel whenever the `enter` key is pressed, and [`audiogram.core/tone-player`](blob/master/src/audiogram/core.clj#27), that is a core.async process that plays a tone and
+The bits that tie this together are then the [`audiogram.core/hearing-user'](tree/master/src/audiogram/core.clj#44), which is a simple core.async process that sends `true` on
+a channel whenever the `enter` key is pressed, and [`audiogram.core/tone-player`](tree/master/src/audiogram/core.clj#27), that is a core.async process that plays a tone and
 after a time sends `false` on a channel.
 
 I'll admit: I was absolutely amazed at how succinct this code is.  core.async certainly made the biggest difference because it allowed me to view the sound and user as
